@@ -18,4 +18,16 @@ public class RequestParam {
     public void addParam(String key, String value) {
         params.put(key, value);
     }
+
+    public void addParam(String key, int value) {
+        params.put(key, value + "");
+    }
+
+    public Map<String, String> getParams() {
+        return params;
+    }
+
+    public void setParams(Map<String, String> params) {
+        this.params = params;
+    }
 }

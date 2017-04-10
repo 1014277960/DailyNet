@@ -3,7 +3,9 @@ package com.wiipu.dailynet.executor;
 import android.os.Handler;
 import android.os.Looper;
 
+import com.wiipu.dailynet.R;
 import com.wiipu.dailynet.base.Request;
+import com.wiipu.dailynet.base.RequestParam;
 import com.wiipu.dailynet.base.Response;
 import com.wiipu.dailynet.callback.AbsCallback;
 
@@ -11,6 +13,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Map;
 
 /**
  * @author wulinpeng
@@ -22,9 +25,8 @@ public class GetStrategy implements MethodStrategy {
     public void deal(Request request) {
         final AbsCallback callback = request.getCallback();
         try {
-            URL url = new URL(request.getUrl());
+            URL url = new URL(getStringUrl(request));
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            // 假设模拟
             connection.setRequestMethod("GET");
             if (connection.getResponseCode() == 200) {
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
@@ -56,5 +58,21 @@ public class GetStrategy implements MethodStrategy {
                 callback.onError(e.getMessage());
             }
         }
+    }
+
+    private String getStringUrl(Request request) {
+        StringBuilder sb = new StringBuilder(request.getUrl());
+        if (request.getParam() != null) {
+            char ch = '?';
+            Map<String, String> map = request.getParam().getParams();
+            for (String key : map.keySet()) {
+                sb.append(ch);
+                if (ch == '?') {
+                    ch = '&';
+                }
+                sb.append(key + "=" + map.get(key));
+            }
+        }
+        return sb.toString();
     }
 }
