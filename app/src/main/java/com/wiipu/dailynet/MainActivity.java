@@ -20,20 +20,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        final Request request = new Request.Builder().url("http://www.baidu.com")
-//                .method(Request.Method.GET)
-//                .build();
-//        DailyNet.getInstance().createCall(this, request).enqueue(new StringCallback() {
-//            @Override
-//            public void onSuccess(String result) {
-//                Log.d("Debug", result);
-//            }
-//
-//            @Override
-//            public void onError(String msg) {
-//
-//            }
-//        });
         TestApi testApi = DailyNet.getInstance().create(TestApi.class, this);
         testApi.getBaidu().enqueue(new StringCallback() {
             @Override
@@ -46,11 +32,5 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        requestManager.start();
-        return super.onTouchEvent(event);
     }
 }

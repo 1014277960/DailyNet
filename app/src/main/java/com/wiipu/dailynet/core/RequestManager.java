@@ -1,6 +1,7 @@
 package com.wiipu.dailynet.core;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.wiipu.dailynet.base.Request;
 import com.wiipu.dailynet.executor.Executor;
@@ -13,7 +14,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  * @datetime: 17/4/6 下午9:44
  * @description: 管理请求，与context生命周期绑定
  */
-public class RequestManager {
+public class RequestManager implements LifecycleListener {
 
     private static final int MAX_SIZE = 10;
 
@@ -22,16 +23,15 @@ public class RequestManager {
     private Executor[] executors;
 
     public static RequestManager get(Context context) {
-        // TODO: 17/4/6 返回绑定生命周期的RequestManager
-        return new RequestManager();
+        // 通过RequestManagerGetter得到和context生命周期绑定的RequestManager
+        return RequestManagerGetter.getInstance().get(context);
     }
 
-    private RequestManager() {
+    protected RequestManager() {
         requestQueue = new LinkedBlockingQueue<>();
         executors = new Executor[MAX_SIZE];
         for (int i = 0; i != MAX_SIZE; ++i) {
             executors[i] = new Executor(requestQueue);
-            executors[i].start();
         }
     }
 
@@ -39,7 +39,7 @@ public class RequestManager {
         requestQueue.add(request);
     }
 
-    public void start() {
+    private void start() {
         for (int i = 0; i != MAX_SIZE; ++i) {
             if (!executors[i].isAlive()) {
                 executors[i] = new Executor(requestQueue);
@@ -65,5 +65,23 @@ public class RequestManager {
                 executors[i].setStop(true);
             }
         }
+    }
+
+    @Override
+    public void onStart() {
+        Log.d("Debug", "onStart");
+        start();
+    }
+
+    @Override
+    public void onPause() {
+        Log.d("Debug", "onPause");
+        pause();
+    }
+
+    @Override
+    public void onStop() {
+        Log.d("Debug", "onStop");
+        stop();
     }
 }
