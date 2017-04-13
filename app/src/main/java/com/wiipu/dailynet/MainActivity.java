@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
 //        call.enqueue(callback);
 
         TestApi testApi = DailyNet.getInstance().create(TestApi.class, this);
-        testApi.getBaidu("id", "query").enqueue(new StringCallback() {
+        testApi.getBaidu("id", 2).enqueue(new StringCallback() {
             @Override
             public void onSuccess(String result) {
 //                Log.d("Debug", result);

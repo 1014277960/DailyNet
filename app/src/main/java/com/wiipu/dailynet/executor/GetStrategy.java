@@ -66,6 +66,9 @@ public class GetStrategy implements MethodStrategy {
         StringBuilder sb = new StringBuilder(request.getUrl());
         if (request.getParam() != null) {
             char ch = '?';
+            if (request.getUrl().matches(".+?\\?.+?=.+?")) {
+                ch = '&';
+            }
             Map<String, String> map = request.getParam().getParams();
             for (String key : map.keySet()) {
                 sb.append(ch);

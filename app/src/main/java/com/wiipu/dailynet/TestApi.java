@@ -12,6 +12,6 @@ import com.wiipu.dailynet.base.Call;
  */
 public interface TestApi {
 
-    @GET("http://www.baidu.com/{id}")
-    public Call getBaidu(@Path("id") String id, @Query("q") String query);
+    @GET("http://www.baidu.com")
+    public Call getBaidu(@Path("id") String id, @Query("q") int query);
 }
