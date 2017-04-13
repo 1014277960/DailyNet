@@ -1,6 +1,8 @@
 package com.wiipu.dailynet;
 
 import com.wiipu.dailynet.annotation.GET;
+import com.wiipu.dailynet.annotation.Path;
+import com.wiipu.dailynet.annotation.Query;
 import com.wiipu.dailynet.base.Call;
 
 /**
@@ -10,6 +12,6 @@ import com.wiipu.dailynet.base.Call;
  */
 public interface TestApi {
 
-    @GET("http://www.baidu.com")
-    public Call getBaidu();
+    @GET("http://www.baidu.com/{id}")
+    public Call getBaidu(@Path("id") String id, @Query("q") String query);
 }

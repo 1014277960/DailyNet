@@ -2,6 +2,7 @@ package com.wiipu.dailynet.executor;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 import com.wiipu.dailynet.R;
 import com.wiipu.dailynet.base.Request;
@@ -25,6 +26,7 @@ public class GetStrategy implements MethodStrategy {
     public void deal(Request request) {
         final AbsCallback callback = request.getCallback();
         try {
+            Log.d("Debug", getStringUrl(request));
             URL url = new URL(getStringUrl(request));
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");

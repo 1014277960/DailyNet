@@ -3,8 +3,11 @@ package com.wiipu.dailynet.core;
 import android.content.Context;
 
 import com.wiipu.dailynet.annotation.GET;
+import com.wiipu.dailynet.annotation.Path;
+import com.wiipu.dailynet.annotation.Query;
 import com.wiipu.dailynet.base.Call;
 import com.wiipu.dailynet.base.Request;
+import com.wiipu.dailynet.base.RequestParam;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
@@ -30,6 +33,10 @@ public class DailyNet {
                 new InvocationHandler() {
                     @Override
                     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+                        // 判断是否是Object的方法
+                        if (method.getDeclaringClass() == Object.class) {
+                            return method.invoke(this, args);
+                        }
                         Request request = parseMethod(method, args);
                         return createCall(context, request);
                     }
@@ -49,7 +56,25 @@ public class DailyNet {
         for (Annotation annotation : annotations) {
             if (annotation instanceof GET) {
                 builder.method(Request.Method.GET);
-                builder.url(((GET) annotation).value());
+                String url = ((GET) annotation).value();
+                Type[] types = method.getGenericParameterTypes();
+                Annotation[][] paramAnnotations = method.getParameterAnnotations();
+                RequestParam param = new RequestParam();
+                for (int i = 0; i != paramAnnotations.length; ++i) {
+                    Annotation[] paramAnnotation = paramAnnotations[i];
+                    if (paramAnnotation.length != 0) {
+                        Annotation a = paramAnnotation[0];
+                        if (a instanceof Path) {
+                            String key = ((Path) a).value();
+                            url = url.replaceFirst("\\{" + key + "\\}", String.valueOf(args[i]));
+                        } else if (a instanceof Query) {
+                            String key = ((Query) a).value();
+                            Object value = args[i];
+                            param.addParam(key, String.valueOf(value));
+                        }
+                    }
+                }
+                builder.url(url).param(param);
             }
         }
         return builder.build();
