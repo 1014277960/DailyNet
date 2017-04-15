@@ -35,6 +35,7 @@ public class Executor extends Thread {
         this.queue = queue;
         strategies = new HashMap<>();
         strategies.put(Request.Method.GET, new GetStrategy());
+        strategies.put(Request.Method.POST, new PostStrategy());
     }
 
     @Override

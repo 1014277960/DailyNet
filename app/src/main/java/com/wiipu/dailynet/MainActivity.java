@@ -51,16 +51,27 @@ public class MainActivity extends AppCompatActivity {
 //        call.enqueue(callback);
 
         TestApi testApi = DailyNet.getInstance().create(TestApi.class, this);
-        testApi.getBaidu("id", 2).enqueue(new StringCallback() {
+        testApi.getNum("a704d5df2ca880f932dbaa0693e638b6", "浙江", "温州", "鹿城区").enqueue(new StringCallback() {
             @Override
             public void onSuccess(String result) {
-//                Log.d("Debug", result);
+                Log.d("Debug", result);
             }
 
             @Override
             public void onError(String msg) {
-
+                Log.d("Debug", msg);
             }
         });
+//        testApi.getBaidu("testPath", 2).enqueue(new StringCallback() {
+//            @Override
+//            public void onSuccess(String result) {
+//                Log.d("Debug", result);
+//            }
+//
+//            @Override
+//            public void onError(String msg) {
+//
+//            }
+//        });
     }
 }

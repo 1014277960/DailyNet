@@ -3,6 +3,7 @@ package com.wiipu.dailynet.core;
 import android.content.Context;
 
 import com.wiipu.dailynet.annotation.GET;
+import com.wiipu.dailynet.annotation.POST;
 import com.wiipu.dailynet.annotation.Path;
 import com.wiipu.dailynet.annotation.Query;
 import com.wiipu.dailynet.base.Call;
@@ -50,41 +51,85 @@ public class DailyNet {
      * @return
      */
     private Request parseMethod(Method method, Object[] args) {
-        Request.Builder builder = new Request.Builder();
-        Annotation[] annotations;
-        annotations = method.getAnnotations();
+        Request request = null;
+        Annotation[] annotations = method.getAnnotations();
         for (Annotation annotation : annotations) {
             // 解析GET请求
             if (annotation instanceof GET) {
-                builder.method(Request.Method.GET);
-                String url = ((GET) annotation).value();
-                Type[] types = method.getGenericParameterTypes();
-                Annotation[][] paramAnnotations = method.getParameterAnnotations();
-                RequestParam param = new RequestParam();
-                // 解析参数
-                for (int i = 0; i != paramAnnotations.length; ++i) {
-                    Annotation[] paramAnnotation = paramAnnotations[i];
-                    if (paramAnnotation.length != 0) {
-                        Annotation a = paramAnnotation[0];
-                        // 替换url中的{path}
-                        if (a instanceof Path) {
-                            String key = ((Path) a).value();
-                            url = url.replaceFirst("\\{" + key + "\\}", String.valueOf(args[i]));
-                        } else if (a instanceof Query) {
-                            // 添加参数，不直接添加到url后面，作为成员变量传入，转换url交给GetStrategy来做
-                            String key = ((Query) a).value();
-                            Object value = args[i];
-                            if (value instanceof Integer || value instanceof String) {
-                                param.addParam(key, String.valueOf(value));
-                            } else {
-                                throw new RuntimeException();
-                            }
-                        }
-                    }
-                }
-                builder.url(url).param(param);
+                request = getRequest(method, args, annotation);
+                break;
+            } else if (annotation instanceof POST) {
+                request = postRequest(method, args, annotation);
             }
         }
+        return request;
+    }
+
+    private Request getRequest(Method method, Object[] args, Annotation methodAnnotation) {
+        Request.Builder builder = new Request.Builder();
+        builder.method(Request.Method.GET);
+        String url = ((GET) methodAnnotation).value();
+        Type[] types = method.getGenericParameterTypes();
+        Annotation[][] paramAnnotations = method.getParameterAnnotations();
+        RequestParam param = new RequestParam();
+
+        // 解析参数
+        for (int i = 0; i != paramAnnotations.length; ++i) {
+            Annotation[] paramAnnotation = paramAnnotations[i];
+            if (paramAnnotation.length == 0) {
+                continue;
+            }
+            Annotation a = paramAnnotation[0];
+            // 替换url中的{path}
+            if (a instanceof Path) {
+                String key = ((Path) a).value();
+                url = url.replaceFirst("\\{" + key + "\\}", String.valueOf(args[i]));
+            } else if (a instanceof Query) {
+                // 添加参数，不直接添加到url后面，作为成员变量传入，转换url交给GetStrategy来做
+                String key = ((Query) a).value();
+                Object value = args[i];
+                if (value instanceof Integer || value instanceof String) {
+                    param.addParam(key, String.valueOf(value));
+                } else {
+                    throw new RuntimeException("HTTP param type error!");
+                }
+            }
+        }
+        builder.url(url).param(param);
+        return builder.build();
+    }
+
+    private Request postRequest(Method method, Object[] args, Annotation methodAnnotation) {
+        Request.Builder builder = new Request.Builder();
+        builder.method(Request.Method.POST);
+        String url = ((POST) methodAnnotation).value();
+        Type[] types = method.getGenericParameterTypes();
+        Annotation[][] paramAnnotations = method.getParameterAnnotations();
+        RequestParam param = new RequestParam();
+
+        // 解析参数
+        for (int i = 0; i != paramAnnotations.length; ++i) {
+            Annotation[] paramAnnotation = paramAnnotations[i];
+            if (paramAnnotation.length == 0) {
+                continue;
+            }
+            Annotation a = paramAnnotation[0];
+            // 替换url中的{path}
+            if (a instanceof Path) {
+                String key = ((Path) a).value();
+                url = url.replaceFirst("\\{" + key + "\\}", String.valueOf(args[i]));
+            } else if (a instanceof Query) {
+                // 添加参数，不直接添加到url后面，作为成员变量传入，转换url交给GetStrategy来做
+                String key = ((Query) a).value();
+                Object value = args[i];
+                if (value instanceof Integer || value instanceof String) {
+                    param.addParam(key, String.valueOf(value));
+                } else {
+                    throw new RuntimeException("HTTP param type error!");
+                }
+            }
+        }
+        builder.url(url).param(param);
         return builder.build();
     }
 
