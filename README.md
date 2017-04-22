@@ -46,4 +46,5 @@
 ```
 # 已完成功能
  - 基本的Get请求
+ - 基本的Post请求
  - 自动绑定FragmentActivity、Activity、ApplicationContext的生命周期
