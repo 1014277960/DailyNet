@@ -2,12 +2,11 @@ package com.wiipu.dailynet.executor;
 
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 
 import com.wiipu.dailynet.base.Request;
 import com.wiipu.dailynet.base.RequestParam;
 import com.wiipu.dailynet.base.Response;
-import com.wiipu.dailynet.callback.AbsCallback;
+import com.wiipu.dailynet.callback.Callback;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -24,7 +23,7 @@ import java.util.Map;
 public class PostStrategy implements MethodStrategy {
     @Override
     public void deal(Request request) {
-        final AbsCallback callback = request.getCallback();
+        final Callback callback = request.getCallback();
         try {
             URL url = new URL(request.getUrl());
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();

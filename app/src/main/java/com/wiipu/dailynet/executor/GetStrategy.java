@@ -4,11 +4,9 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
-import com.wiipu.dailynet.R;
 import com.wiipu.dailynet.base.Request;
-import com.wiipu.dailynet.base.RequestParam;
 import com.wiipu.dailynet.base.Response;
-import com.wiipu.dailynet.callback.AbsCallback;
+import com.wiipu.dailynet.callback.Callback;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -24,7 +22,7 @@ import java.util.Map;
 public class GetStrategy implements MethodStrategy {
     @Override
     public void deal(Request request) {
-        final AbsCallback callback = request.getCallback();
+        final Callback callback = request.getCallback();
         try {
             Log.d("Debug", getStringUrl(request));
             URL url = new URL(getStringUrl(request));

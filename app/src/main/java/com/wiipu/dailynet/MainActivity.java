@@ -3,13 +3,7 @@ package com.wiipu.dailynet;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MotionEvent;
 
-import com.wiipu.dailynet.base.Call;
-import com.wiipu.dailynet.base.RequestParam;
-import com.wiipu.dailynet.callback.AbsCallback;
-import com.wiipu.dailynet.base.Request;
-import com.wiipu.dailynet.base.Response;
 import com.wiipu.dailynet.callback.StringCallback;
 import com.wiipu.dailynet.core.DailyNet;
 import com.wiipu.dailynet.core.RequestManager;

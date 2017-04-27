@@ -1,16 +1,7 @@
 package com.wiipu.dailynet.executor;
 
-import android.os.Handler;
-import android.os.Looper;
-
-import com.wiipu.dailynet.callback.AbsCallback;
 import com.wiipu.dailynet.base.Request;
-import com.wiipu.dailynet.base.Response;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
@@ -41,19 +32,22 @@ public class Executor extends Thread {
     @Override
     public void run() {
         // 判断是否该停止，如果被停止了，结束方法，同时恢复标志位(isInterrupt不回复标志位)
-        while (!interrupted()) {
-            if (queue != null) {
-                try {
-                    Request request = queue.take();
-                    while (isPause) {
-                        // 暂停死循环，直到结束
-                    }
-                    if (!request.isCancel()) {
-                        dealRequest(request);
-                    }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+        if (queue == null) {
+            throw new RuntimeException("RequestQueue can not be null!");
+        }
+        while (true) {
+            try {
+                Request request = queue.take();
+                while (isPause) {
+                    // 暂停死循环，直到结束
                 }
+                if (!request.isCancel()) {
+                    dealRequest(request);
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                // stop的时候推出运行
+                return;
             }
         }
     }

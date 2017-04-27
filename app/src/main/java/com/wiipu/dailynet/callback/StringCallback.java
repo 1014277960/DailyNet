@@ -7,7 +7,7 @@ import com.wiipu.dailynet.base.Response;
  * @datetime: 17/4/6 下午11:18
  * @description:
  */
-public abstract class StringCallback extends AbsCallback<String> {
+public abstract class StringCallback extends Callback<String> {
 
     @Override
     public String parseResponse(Response response) {

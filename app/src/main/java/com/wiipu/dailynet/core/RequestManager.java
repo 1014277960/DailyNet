@@ -42,9 +42,11 @@ public class RequestManager implements LifecycleListener {
     private void start() {
         for (int i = 0; i != MAX_SIZE; ++i) {
             if (!executors[i].isAlive()) {
+                // 说明此时要么是刚开始的时候没有start，要么是被stop了，都重新开始
                 executors[i] = new Executor(requestQueue);
                 executors[i].start();
             } else {
+                // 此时状态时pause
                 executors[i].setPause(false);
             }
 

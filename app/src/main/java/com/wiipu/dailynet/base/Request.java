@@ -1,6 +1,6 @@
 package com.wiipu.dailynet.base;
 
-import com.wiipu.dailynet.callback.AbsCallback;
+import com.wiipu.dailynet.callback.Callback;
 
 /**
  * @author wulinpeng
@@ -19,7 +19,7 @@ public class Request {
     private RequestParam param;
     boolean isCancel;
 
-    private AbsCallback callback;
+    private Callback callback;
 
     private Request(Builder builder) {
         this.method = builder.method;
@@ -51,11 +51,11 @@ public class Request {
         this.param = param;
     }
 
-    public AbsCallback getCallback() {
+    public Callback getCallback() {
         return callback;
     }
 
-    public void setCallback(AbsCallback callback) {
+    public void setCallback(Callback callback) {
         this.callback = callback;
     }
 

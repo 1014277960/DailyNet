@@ -1,6 +1,6 @@
 package com.wiipu.dailynet.base;
 
-import com.wiipu.dailynet.callback.AbsCallback;
+import com.wiipu.dailynet.callback.Callback;
 import com.wiipu.dailynet.core.RequestManager;
 
 /**
@@ -12,7 +12,7 @@ public class Call {
     private Request request;
     private RequestManager manager;
 
-    public void enqueue(AbsCallback<?> callback)  {
+    public void enqueue(Callback<?> callback)  {
         if (manager != null && request != null) {
             request.setCallback(callback);
             manager.enqueue(request);
