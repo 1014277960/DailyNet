@@ -9,7 +9,7 @@ import com.wiipu.dailynet.callback.Callback;
  */
 public class Request {
 
-    public static enum Method {
+    public enum Method {
         GET,
         POST
     }
