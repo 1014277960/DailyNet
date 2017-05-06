@@ -15,6 +15,8 @@ public class Executor extends Thread {
 
     private volatile boolean isPause = false;
 
+    private volatile boolean isStop = false;
+
     private BlockingQueue<Request> queue;
 
     /**
@@ -31,10 +33,12 @@ public class Executor extends Thread {
 
     @Override
     public void run() {
-        // 判断是否该停止，如果被停止了，结束方法，同时恢复标志位(isInterrupt不回复标志位)
+        isStop = false;
+
         if (queue == null) {
             throw new RuntimeException("RequestQueue can not be null!");
         }
+
         while (true) {
             try {
                 Request request = queue.take();
@@ -46,8 +50,11 @@ public class Executor extends Thread {
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
-                // stop的时候推出运行
-                return;
+                // stop的时候退出运行
+                if (isStop) {
+                    return;
+                }
+                continue;
             }
         }
     }
@@ -61,7 +68,16 @@ public class Executor extends Thread {
         isPause = pause;
     }
 
-    public void setStop(boolean stop) {
+    public void setStop() {
+        isStop = true;
         interrupt();
+    }
+
+    public boolean isPause() {
+        return isPause;
+    }
+
+    public boolean isStop() {
+        return isStop;
     }
 }
