@@ -53,6 +53,7 @@ public class RequestManager implements LifecycleListener {
                 attachedExecutors[i].setPause(false);
             } else {
                 // 说明此时要么是刚开始的时候没有start，要么是被stop了，都重新开始
+                // 注意一个thread不能多次start，所以new新的
                 attachedExecutors[i] = new AttachedExecutor(requestQueue);
                 attachedExecutors[i].start();
             }

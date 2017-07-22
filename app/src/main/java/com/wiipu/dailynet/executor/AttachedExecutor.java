@@ -54,15 +54,9 @@ public class AttachedExecutor extends Executor {
 
                 }
             } catch (InterruptedException e) {
-                // TODO: 17/7/22 修复stop后还是存在会丢掉request的情况
                 e.printStackTrace();
-                // stop的时候退出运行
+                // stop的时候退出运行,且request自动丢弃
                 if (isStop) {
-                    // 中断后把request放回原处
-                    if (request != null) {
-                        queue.add(request);
-                        request = null;
-                    }
                     return;
                 }
                 continue;
