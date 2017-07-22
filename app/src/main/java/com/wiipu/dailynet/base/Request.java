@@ -18,6 +18,7 @@ public class Request {
     private String url;
     private RequestParam param;
     boolean isCancel;
+    boolean isAttach = true;
 
     private Callback callback;
 
@@ -65,6 +66,14 @@ public class Request {
 
     public void setCancel(boolean cancel) {
         isCancel = cancel;
+    }
+
+    public boolean isAttach() {
+        return isAttach;
+    }
+
+    public void setAttach(boolean attach) {
+        isAttach = attach;
     }
 
     public static class Builder {

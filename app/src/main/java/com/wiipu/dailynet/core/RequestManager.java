@@ -4,7 +4,8 @@ import android.content.Context;
 import android.util.Log;
 
 import com.wiipu.dailynet.base.Request;
-import com.wiipu.dailynet.executor.Executor;
+import com.wiipu.dailynet.executor.AttachedExecutor;
+import com.wiipu.dailynet.executor.NormalExecutor;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -20,7 +21,9 @@ public class RequestManager implements LifecycleListener {
 
     private BlockingQueue<Request> requestQueue;
 
-    private Executor[] executors;
+    private AttachedExecutor[] attachedExecutors;
+
+    private NormalExecutor[] normalExecutors;
 
     public static RequestManager get(Context context) {
         // 通过RequestManagerGetter得到和context生命周期绑定的RequestManager
@@ -29,9 +32,13 @@ public class RequestManager implements LifecycleListener {
 
     protected RequestManager() {
         requestQueue = new LinkedBlockingQueue<>();
-        executors = new Executor[MAX_SIZE];
+        attachedExecutors = new AttachedExecutor[MAX_SIZE];
+        normalExecutors = new NormalExecutor[MAX_SIZE];
         for (int i = 0; i != MAX_SIZE; ++i) {
-            executors[i] = new Executor(requestQueue);
+            attachedExecutors[i] = new AttachedExecutor(requestQueue);
+            normalExecutors[i] = new NormalExecutor(requestQueue);
+            attachedExecutors[i].start();
+            normalExecutors[i].start();
         }
     }
 
@@ -41,13 +48,13 @@ public class RequestManager implements LifecycleListener {
 
     private void start() {
         for (int i = 0; i != MAX_SIZE; ++i) {
-            if (executors[i].isPause()) {
+            if (attachedExecutors[i].isPause()) {
                 // 此时状态时pause
-                executors[i].setPause(false);
+                attachedExecutors[i].setPause(false);
             } else {
                 // 说明此时要么是刚开始的时候没有start，要么是被stop了，都重新开始
-                executors[i] = new Executor(requestQueue);
-                executors[i].start();
+                attachedExecutors[i] = new AttachedExecutor(requestQueue);
+                attachedExecutors[i].start();
             }
 
         }
@@ -55,16 +62,16 @@ public class RequestManager implements LifecycleListener {
 
     public void pause() {
         for (int i = 0; i != MAX_SIZE; ++i) {
-            if (executors[i] != null) {
-                executors[i].setPause(true);
+            if (attachedExecutors[i] != null) {
+                attachedExecutors[i].setPause(true);
             }
         }
     }
 
     public void stop() {
         for (int i = 0; i != MAX_SIZE; ++i) {
-            if (executors[i] != null) {
-                executors[i].setStop();
+            if (attachedExecutors[i] != null) {
+                attachedExecutors[i].setStop();
             }
         }
     }

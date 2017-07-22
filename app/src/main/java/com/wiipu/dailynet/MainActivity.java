@@ -79,33 +79,45 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        final Request request = new Request.Builder()
-                .url("http://api.zhuishushenqi.com/book/fuzzy-search")
-                .method(Request.Method.GET)
-                .build();
-        RequestParam param = new RequestParam();
-        param.addParam("query", "1");
-        param.addParam("start", 0);
-        param.addParam("limit", 100);
-        request.setParam(param);
-        Call call = DailyNet.getInstance().createCall(this, request);
-        Callback<String> callback = new Callback<String>() {
+        new Thread(new Runnable() {
             @Override
-            public void onSuccess(String result) {
-                Log.d("Debug", result.substring(0, 20));
-            }
+            public void run() {
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                Log.d("Debug", "wake");
+                final Request request = new Request.Builder()
+                        .url("http://api.zhuishushenqi.com/book/fuzzy-search")
+                        .method(Request.Method.GET)
+                        .build();
+                request.setAttach(false);
+                RequestParam param = new RequestParam();
+                param.addParam("query", "1");
+                param.addParam("start", 0);
+                param.addParam("limit", 100);
+                request.setParam(param);
+                Call call = DailyNet.getInstance().createCall(MainActivity.this, request);
+                Callback<String> callback = new Callback<String>() {
+                    @Override
+                    public void onSuccess(String result) {
+                        Log.d("Debug", result.substring(0, 20));
+                    }
 
-            @Override
-            public void onError(String msg) {
+                    @Override
+                    public void onError(String msg) {
+                        Log.d("Debug", msg);
+                    }
 
+                    @Override
+                    public String parseResponse(Response response) {
+                        return response.getResult();
+                    }
+                };
+                call.enqueue(callback);
             }
-
-            @Override
-            public String parseResponse(Response response) {
-                return response.getResult();
-            }
-        };
-        call.enqueue(callback);
+        }).start();
         return super.onTouchEvent(event);
     }
 }
