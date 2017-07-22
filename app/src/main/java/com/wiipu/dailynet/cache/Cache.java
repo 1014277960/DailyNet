@@ -10,7 +10,7 @@ import com.wiipu.dailynet.base.Response;
  */
 public interface Cache<K, V> {
 
-    public Response get(K key);
+    public V get(K key);
 
     public void put(K key, V value);
 
