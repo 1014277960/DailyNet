@@ -27,7 +27,6 @@ public class AttachedExecutor extends Executor {
     @Override
     public void run() {
         isStop = false;
-
         if (queue == null) {
             throw new RuntimeException("RequestQueue can not be null!");
         }
@@ -55,6 +54,7 @@ public class AttachedExecutor extends Executor {
 
                 }
             } catch (InterruptedException e) {
+                // TODO: 17/7/22 修复stop后还是存在会丢掉request的情况
                 e.printStackTrace();
                 // stop的时候退出运行
                 if (isStop) {
