@@ -19,6 +19,7 @@ public class Request {
     private Method method;
     private String url;
     private RequestParam param;
+    private RequestHeaders headers;
     boolean isCancel;
     boolean isAttach = true;
 
@@ -29,6 +30,7 @@ public class Request {
         this.url = builder.url;
         this.param = builder.param;
         this.isAttach = builder.isAttach;
+        this.headers = builder.headers;
     }
 
     public Method getMethod() {
@@ -53,6 +55,14 @@ public class Request {
 
     public void setParam(RequestParam param) {
         this.param = param;
+    }
+
+    public RequestHeaders getHeaders() {
+        return headers;
+    }
+
+    public void setHeaders(RequestHeaders headers) {
+        this.headers = headers;
     }
 
     public Callback getCallback() {
@@ -83,6 +93,7 @@ public class Request {
         private Method method = Method.GET;
         private String url = "";
         private RequestParam param;
+        private RequestHeaders headers;
         private boolean isAttach = false;
 
         public Builder url(String url) {
@@ -97,6 +108,11 @@ public class Request {
 
         public Builder param(RequestParam param) {
             this.param = param;
+            return this;
+        }
+
+        public Builder headers(RequestHeaders headers) {
+            this.headers = headers;
             return this;
         }
 

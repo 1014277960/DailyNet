@@ -28,6 +28,8 @@ public class RequestParam {
     }
 
     public void setParams(Map<String, String> params) {
-        this.params = params;
+        if (params != null) {
+            this.params = params;
+        }
     }
 }
