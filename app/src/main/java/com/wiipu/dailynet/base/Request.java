@@ -1,5 +1,7 @@
 package com.wiipu.dailynet.base;
 
+import android.os.Bundle;
+
 import com.wiipu.dailynet.callback.Callback;
 
 /**
@@ -26,6 +28,7 @@ public class Request {
         this.method = builder.method;
         this.url = builder.url;
         this.param = builder.param;
+        this.isAttach = builder.isAttach;
     }
 
     public Method getMethod() {
@@ -80,6 +83,7 @@ public class Request {
         private Method method = Method.GET;
         private String url = "";
         private RequestParam param;
+        private boolean isAttach = false;
 
         public Builder url(String url) {
             this.url = url;
@@ -93,6 +97,11 @@ public class Request {
 
         public Builder param(RequestParam param) {
             this.param = param;
+            return this;
+        }
+
+        public Builder attach(boolean attach) {
+            this.isAttach = attach;
             return this;
         }
 
