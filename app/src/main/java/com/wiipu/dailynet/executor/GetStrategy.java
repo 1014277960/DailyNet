@@ -5,6 +5,7 @@ import android.os.Looper;
 import android.util.Log;
 
 import com.wiipu.dailynet.base.Request;
+import com.wiipu.dailynet.base.RequestHeaders;
 import com.wiipu.dailynet.base.Response;
 import com.wiipu.dailynet.cache.MemoryCache;
 import com.wiipu.dailynet.callback.Callback;
@@ -14,6 +15,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author wulinpeng
@@ -35,6 +37,7 @@ public class GetStrategy implements MethodStrategy {
             URL url = new URL(urlString);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
+            setHeaders(connection, request.getHeaders());
             if (connection.getResponseCode() == 200) {
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
                 StringBuilder sb = new StringBuilder();
@@ -107,5 +110,16 @@ public class GetStrategy implements MethodStrategy {
             }
         }
         return sb.toString();
+    }
+
+    // TODO: 2017/8/12 测试header
+    private void setHeaders(HttpURLConnection connection, RequestHeaders headers) {
+        if (connection == null || headers == null || headers.getHeaders() == null) {
+            return;
+        }
+        Map<String, String > header = headers.getHeaders();
+        for (String key: header.keySet()) {
+            connection.setRequestProperty(key, header.get(key));
+        }
     }
 }

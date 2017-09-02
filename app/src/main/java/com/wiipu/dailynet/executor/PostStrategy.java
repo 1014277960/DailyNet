@@ -4,6 +4,7 @@ import android.os.Handler;
 import android.os.Looper;
 
 import com.wiipu.dailynet.base.Request;
+import com.wiipu.dailynet.base.RequestHeaders;
 import com.wiipu.dailynet.base.RequestParam;
 import com.wiipu.dailynet.base.Response;
 import com.wiipu.dailynet.callback.Callback;
@@ -33,6 +34,7 @@ public class PostStrategy implements MethodStrategy {
             writer.write(param);
             writer.flush();
             writer.close();
+            setHeaders(connection, request.getHeaders());
             if (connection.getResponseCode() == 200) {
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
                 StringBuilder sb = new StringBuilder();
@@ -82,5 +84,16 @@ public class PostStrategy implements MethodStrategy {
             }
         }
         return sb.toString();
+    }
+
+    // TODO: 2017/8/12 测试header
+    private void setHeaders(HttpURLConnection connection, RequestHeaders headers) {
+        if (connection == null || headers == null || headers.getHeaders() == null) {
+            return;
+        }
+        Map<String, String > header = headers.getHeaders();
+        for (String key: header.keySet()) {
+            connection.setRequestProperty(key, header.get(key));
+        }
     }
 }
