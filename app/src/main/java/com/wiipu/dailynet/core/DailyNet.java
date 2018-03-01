@@ -23,10 +23,23 @@ import java.lang.reflect.Type;
  */
 public class DailyNet {
 
+    /**
+     * 因为DailyNet是单例，所以配置类只有一份，为全局配置
+     */
+    private Options mOptions;
+
     private DailyNet() {}
 
     public static DailyNet getInstance() {
         return Singleton.INSTANCE.getInstance();
+    }
+
+    public Options getOptions() {
+        return mOptions;
+    }
+
+    public void setOptions(Options mOptions) {
+        this.mOptions = mOptions;
     }
 
     /**

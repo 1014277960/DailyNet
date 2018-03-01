@@ -46,6 +46,7 @@ public class AttachedExecutor extends Executor {
                         continue;
                     }
                 }
+                // todo 取消暂停功能，无法实现，而且死循环这方法太垃圾
                 while (isPause) {
                     // 暂停死循环，直到结束
                 }
