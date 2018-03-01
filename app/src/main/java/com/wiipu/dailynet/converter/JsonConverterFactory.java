@@ -5,7 +5,7 @@ package com.wiipu.dailynet.converter;
  * @datetime: 18/3/1 下午9:57
  * @description:
  */
-public class JsonConverterFactory implements ConverterFactory<String> {
+public class JsonConverterFactory implements ConverterFactory {
 
     public static JsonConverterFactory instance = new JsonConverterFactory();
 

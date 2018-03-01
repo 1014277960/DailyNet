@@ -24,9 +24,9 @@ public abstract class AutoConvertCallback<T> extends Callback<T> {
         }
 
         for (ConverterFactory factory : factories) {
-            Converter<String, T> converter = factory.create(getGenericClass());
+            Converter<Response, T> converter = (Converter<Response, T>) factory.create(getGenericClass());
             String json = response.getResult();
-            T result = converter.convert(json);
+            T result = converter.convert(response);
             if (result != null) {
                 return result;
             }

@@ -2,6 +2,7 @@ package com.wiipu.dailynet.converter;
 
 import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
+import com.wiipu.dailynet.base.Response;
 
 import java.lang.reflect.Type;
 import java.util.Objects;
@@ -11,7 +12,7 @@ import java.util.Objects;
  * @datetime: 18/3/1 下午9:35
  * @description: 将json数据转换为object
  */
-public class JsonConverter<T> implements Converter<String, T> {
+public class JsonConverter<T> implements Converter<Response, T> {
 
     private Class tClass;
 
@@ -20,9 +21,9 @@ public class JsonConverter<T> implements Converter<String, T> {
     }
 
     @Override
-    public T convert(String fromValue) {
+    public T convert(Response fromValue) {
         Gson gson = new Gson();
-        T result  = (T) gson.fromJson(fromValue, tClass);
+        T result  = (T) gson.fromJson(fromValue.getResult(), tClass);
         return result;
     }
 }
